@@ -41,7 +41,7 @@ def parse_apple_note(note_folder_path):
     return {
         "title": title,
         "content": content,
-        "labels": ["Apple Notes"],  # Tag all Apple Notes with this label
+        "labels": ["source"],  # Tag all Apple Notes with source label
         "created_date": None  # Apple Notes export doesn't include creation date
     }
 
