@@ -7,6 +7,10 @@ This module handles converting parsed notes into Notion block format.
 from typing import List, Dict, Any
 
 
+# Notion API has a character limit per block
+NOTION_BLOCK_CHAR_LIMIT = 2000
+
+
 class NotionFormatter:
     """Formatter to convert notes to Notion block format."""
     
@@ -101,7 +105,7 @@ class NotionFormatter:
                                 {
                                     'type': 'text',
                                     'text': {
-                                        'content': paragraph[:2000]  # Notion has a 2000 char limit per block
+                                        'content': paragraph[:NOTION_BLOCK_CHAR_LIMIT]
                                     }
                                 }
                             ]
@@ -119,7 +123,7 @@ class NotionFormatter:
                             {
                                 'type': 'text',
                                 'text': {
-                                    'content': item['text'][:2000]
+                                    'content': item['text'][:NOTION_BLOCK_CHAR_LIMIT]
                                 }
                             }
                         ],

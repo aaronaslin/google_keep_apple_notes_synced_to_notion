@@ -98,7 +98,7 @@ class AppleNotesParser:
                         decompressed = gzip.decompress(data)
                         # Extract text content (simplified approach)
                         content = decompressed.decode('utf-8', errors='ignore')
-                    except:
+                    except (gzip.BadGzipFile, UnicodeDecodeError, OSError):
                         # If decompression fails, use snippet
                         content = snippet or ''
                 
