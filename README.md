@@ -51,8 +51,10 @@ This project provides an automated workflow to migrate and manage your notes fro
      ```
 
 4. **Prepare data:**
+   - Create `data/google_notes/` and `data/apple_notes/` folders in the project root
    - Export your Google Keep notes via [Google Takeout](https://takeout.google.com) and place JSON files in `data/google_notes/`
    - Export your Apple Notes as markdown folders and place them in `data/apple_notes/`
+   - Note: The `data/` folder is excluded from version control to protect your personal information
 
 ## Key Actions
 
@@ -156,9 +158,11 @@ gkeep_notion_integration/
 ## Security
 
 ⚠️ **Important:**
-- `.env` file contains sensitive credentials
-- Never commit `.env` to version control
-- `.gitignore` is configured to exclude it
+- `.env` file contains sensitive credentials (Notion API token and database ID)
+- `data/` folder contains your personal notes
+- Both are excluded from version control via `.gitignore`
+- Never commit `.env` or personal data to version control
+- When cloning this repo, you'll need to create your own `.env` and `data/` folders
 
 ## Troubleshooting
 
