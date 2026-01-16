@@ -1,19 +1,21 @@
-# Google Keep to Notion Integration
+# Notes to Notion Integration
 
-A Python-based tool that parses Google Keep notes exported via Google Takeout and syncs them to a Notion database.
+A Python-based tool that parses notes from multiple sources (Google Keep, Apple Notes) and syncs them to a Notion database.
 
 ## Purpose
 
-This project provides an automated workflow to migrate and manage your Google Keep notes in Notion. It handles parsing, formatting, deduplication, and timestamping of your notes.
+This project provides an automated workflow to migrate and manage your notes from various sources in Notion. It handles parsing, formatting, deduplication, and timestamping of notes from Google Keep and Apple Notes.
 
 ## Scope
 
 **What's Included:**
 - Parse Google Keep JSON files (title, content, labels, creation date)
+- Parse Apple Notes markdown folders (title, content with source label)
 - Sync notes to Notion database with duplicate detection
-- Automatic timestamp extraction and population
+- Automatic timestamp extraction and population (Google Keep)
 - Cleanup utility to remove duplicate entries
 - Validation tools to test Notion API connection
+- Multi-source note consolidation
 
 **What's NOT Included:**
 - HTML files (kept for reference only)
@@ -49,21 +51,33 @@ This project provides an automated workflow to migrate and manage your Google Ke
      ```
 
 4. **Prepare data:**
-   - Export your Google Keep notes via [Google Takeout](https://takeout.google.com)
-   - Place JSON files in the `data/` folder
+   - Export your Google Keep notes via [Google Takeout](https://takeout.google.com) and place JSON files in `data/google_notes/`
+   - Export your Apple Notes as markdown folders and place them in `data/apple_notes/`
 
 ## Key Actions
 
-### Parse Notes
+### Parse Google Keep Notes
 Extracts data from JSON files. Automatically called by sync scripts.
 ```bash
 python src/parser.py
 ```
 
-### Sync to Notion
-Uploads notes to your Notion database with duplicate detection.
+### Parse Apple Notes
+Extracts data from markdown folders. Automatically called by sync scripts.
+```bash
+python src/apple_notes_parser.py
+```
+
+### Sync Google Keep to Notion
+Uploads Google Keep notes to your Notion database with duplicate detection.
 ```bash
 python src/notion_sync.py
+```
+
+### Sync Apple Notes to Notion
+Uploads Apple Notes to your Notion database with duplicate detection.
+```bash
+python src/apple_notes_sync.py
 ```
 
 **Output:**
@@ -93,10 +107,14 @@ python src/update_timestamps.py
 
 ```
 gkeep_notion_integration/
-├── data/                      # Google Keep JSON/HTML files
+├── data/
+│   ├── google_notes/          # Google Keep JSON/HTML exports (342 notes)
+│   └── apple_notes/           # Apple Notes markdown folders
 ├── src/
-│   ├── parser.py             # Parse JSON files
-│   ├── notion_sync.py        # Sync to Notion
+│   ├── parser.py             # Parse Google Keep JSON files
+│   ├── apple_notes_parser.py # Parse Apple Notes markdown
+│   ├── notion_sync.py        # Sync Google Keep to Notion
+│   ├── apple_notes_sync.py   # Sync Apple Notes to Notion
 │   ├── cleanup_duplicates.py # Remove duplicates
 │   ├── update_timestamps.py  # Add creation dates
 │   ├── validate_notion.py    # Test connection
@@ -110,6 +128,7 @@ gkeep_notion_integration/
 
 ## Data Fields Extracted
 
+### Google Keep
 | Field | Source | Notion Field | Type |
 |-------|--------|--------------|------|
 | Title | Keep title | Title | Text |
@@ -117,12 +136,22 @@ gkeep_notion_integration/
 | Labels | Keep labels | Labels | Multi-select |
 | Created Date | createdTimestampUsec | Created Date | Date |
 
+### Apple Notes
+| Field | Source | Notion Field | Type |
+|-------|--------|--------------|------|
+| Title | Folder name | Title | Text |
+| Content | Markdown file content | Content | Text |
+| Labels | "Apple Notes" (source label) | Labels | Multi-select |
+| Created Date | Not available | Created Date | Date |
+
 ## Notes
 
-- **Duplicate Detection:** Based on matching title + content
+- **Duplicate Detection:** Based on matching title + content across all sources
 - **Character Limits:** Titles limited to 100 chars, content to 2000 chars
-- **Timestamps:** Converted from microseconds to ISO format
-- **Checklists:** Formatted as `[x] item` or `[ ] item`
+- **Timestamps:** Google Keep timestamps converted from microseconds to ISO format
+- **Checklists:** Formatted as `[x] item` or `[ ] item` (Google Keep)
+- **Source Labels:** Apple Notes automatically tagged with "Apple Notes" label for easy filtering
+- **Multi-source:** Consolidates notes from Google Keep and Apple Notes into single Notion database
 
 ## Security
 
@@ -142,16 +171,20 @@ gkeep_notion_integration/
 - Title column must be type "Title" (not text)
 
 **No notes found**
-- Verify JSON files are in `data/` folder
-- Check file format from Google Takeout
+- For Google Keep: Verify JSON files are in `data/google_notes/` folder
+- For Apple Notes: Verify markdown folders are in `data/apple_notes/` folder
+- Check file format from respective exports
 
 ## Future Enhancements
 
+- [ ] Additional note sources (Evernote, OneNote, etc.)
 - [ ] Image upload support
 - [ ] Scheduled/automated sync
 - [ ] HTML content parsing
 - [ ] Archive vs. delete option
 - [ ] Bulk note update capability
+- [ ] Timestamp extraction for Apple Notes
+- [ ] Attachment handling for both sources
 
 ## License
 
