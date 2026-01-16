@@ -1,0 +1,13 @@
+{
+  "notion": {
+    "api_token": "YOUR_NOTION_API_TOKEN_HERE",
+    "parent_page_id": "YOUR_PARENT_PAGE_ID_HERE"
+  },
+  "google_keep": {
+    "username": "your_email@gmail.com",
+    "password": "your_app_password_here"
+  },
+  "apple_notes": {
+    "database_path": "/Users/YOUR_USERNAME/Library/Group Containers/group.com.apple.notes/NoteStore.sqlite"
+  }
+}
