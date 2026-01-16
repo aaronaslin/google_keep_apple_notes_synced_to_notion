@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 # Path to your unzipped 'Keep' folder from Google Takeout
-TAKEOUT_DIR = './data'
+TAKEOUT_DIR = './data/google_notes'
 
 def parse_keep_json(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
